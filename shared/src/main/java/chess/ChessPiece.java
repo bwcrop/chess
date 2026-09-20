@@ -13,11 +13,11 @@ import java.util.Objects;
 public class ChessPiece {
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        ChessPiece that = (ChessPiece) o;
+        ChessPiece that = (ChessPiece) obj;
         return pieceColor == that.pieceColor && pieceType == that.pieceType;
     }
 
@@ -74,7 +74,7 @@ public class ChessPiece {
     private static final int[][] ROOK_DIRECTIONS = {{1,0}, {-1,0}, {0,1}, {0,-1}};
     private static final int[][] BISHOP_DIRECTIONS = {{1,1}, {1,-1},{-1,1},{-1,-1}};
     private static final int[][] KNIGHT_DIRECTIONS = {
-            {2,1}, {2,-1}, {-2,1}, {-2,-1}, {1,2}, {1,-2}, {-1,2}, {-1,2}
+            {2,1}, {2,-1}, {-2,1}, {-2,-1}, {1,2}, {1,-2}, {-1,2}, {-1,-2}
     };
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
@@ -86,7 +86,7 @@ public class ChessPiece {
             case QUEEN -> addSlidingMoves(board, myPosition, possibleMoves, QUEEN_DIRECTIONS);
             case ROOK -> addSlidingMoves(board, myPosition, possibleMoves, ROOK_DIRECTIONS);
             case BISHOP -> addSlidingMoves(board, myPosition, possibleMoves, BISHOP_DIRECTIONS);
-            case PAWN -> addPawnMoves(board, myPosition, possibleMoves);
+            case PAWN -> addPawnMove(board, myPosition, possibleMoves);
         }
 
         return possibleMoves;
@@ -132,7 +132,7 @@ public class ChessPiece {
             }
         }
     }
-    private void addPawnMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves) {
+    private void addPawnMove(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves) {
         int direction = (pieceColor == ChessGame.TeamColor.WHITE) ? 1 : -1;
         int startRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 2 : 7;
         int promotionRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 8 : 1;
@@ -140,7 +140,7 @@ public class ChessPiece {
         int oneRow = myPosition.getRow() + direction;
 
         if (isInBounds(oneRow, col) && board.getPiece(new ChessPosition(oneRow, col)) == null) {
-            addPawnMoves(moves, myPosition, new ChessPosition(oneRow, col), promotionRow);
+            addPawnMove(moves, myPosition, new ChessPosition(oneRow, col), promotionRow);
 
             if (myPosition.getRow() == startRow) {
                 ChessPosition twoStep = new ChessPosition(myPosition.getRow()+ 2 * direction, col);
@@ -158,7 +158,7 @@ public class ChessPiece {
             ChessPosition target = new ChessPosition(oneRow, targetCol);
             ChessPiece occupant = board.getPiece(target);
             if (occupant != null && occupant.getTeamColor() != pieceColor) {
-                addPawnMoves(mves, myPosition, target, promotionRow);
+                addPawnMove(moves, myPosition, target, promotionRow);
             }
         }
     }

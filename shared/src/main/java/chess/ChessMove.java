@@ -11,11 +11,11 @@ import java.util.Objects;
 public class ChessMove {
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        ChessMove chessMove = (ChessMove) o;
+        ChessMove chessMove = (ChessMove) obj;
         return Objects.equals(startPosition, chessMove.startPosition) && Objects.equals(endPosition, chessMove.endPosition) && promotionPiece == chessMove.promotionPiece;
     }
 

@@ -43,11 +43,11 @@ public class ChessBoard {
      */
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        ChessBoard that = (ChessBoard) o;
+        ChessBoard that = (ChessBoard) obj;
         return Objects.deepEquals(squares, that.squares);
     }
 
