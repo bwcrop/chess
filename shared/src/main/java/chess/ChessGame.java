@@ -37,7 +37,14 @@ public class ChessGame {
                 "}";
     }
 
+    private TeamColor teamTurn;
+    private ChessBoard board = new ChessBoard();
+
+    private boolean gameOver;
+
     public ChessGame() {
+        this.board.resetBoard();
+        setTeamTurn(TeamColor.WHITE);
     }
 
     /**
