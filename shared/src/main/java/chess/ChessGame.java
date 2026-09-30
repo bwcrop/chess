@@ -20,7 +20,7 @@ public class ChessGame {
             return false;
         }
         ChessGame chessGame = (ChessGame) obj;
-        return gameOver == chessGame.gameOver && teamTun == chessGame.teamTurn && Objects.equals(board, chessGame.board);
+        return gameOver == chessGame.gameOver && teamTurn == chessGame.teamTurn && Objects.equals(board, chessGame.board);
     }
 
     @Override
@@ -47,11 +47,19 @@ public class ChessGame {
         setTeamTurn(TeamColor.WHITE);
     }
 
+    public boolean isOver() {
+        return gameOver;
+    }
+
+    public void setOver(boolean isOver) {
+        this.gameOver = isOver;
+    }
+
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return teamTurn;
     }
 
     /**
@@ -60,9 +68,8 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        teamTurn = team;
     }
-
     /**
      * Enum identifying the 2 possible teams in a chess game
      */
