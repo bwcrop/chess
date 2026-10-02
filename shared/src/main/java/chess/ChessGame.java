@@ -144,8 +144,36 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition kingPosition = null;
+        for (int row = 1; row <= 8 && kingPosition == null; row ++) {
+            for (int column = 1; column <= 8 && kingPosition == null; column ++) {
+                ChessPiece potentialPiece = board.getPiece(new ChessPosition(row,column));
+                if (potentialPiece == null) {
+                    continue;
+                }
+                if (potentialPiece.getTeamColor() == teamColor && potentialPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                    kingPosition = new ChessPosition(row,column);
+                }
+            }
+        }
+
+        for (int row = 1; row <= 8; row ++) {
+            for (int column = 1; column <= 8; column ++) {
+                ChessPiece enemyPiece = board.getPiece(new ChessPosition(row,column));
+                if (enemyPiece == null || enemyPiece.getTeamColor() == teamColor) {
+                    continue;
+                }
+
+                for (ChessMove potentialEnemyMove : enemyPiece.pieceMoves(board, new ChessPosition(row,column))) {
+                    if (potentialEnemyMove.getEndPosition().equals(kingPosition)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
+
 
     /**
      * Determines if the given team is in checkmate
@@ -154,7 +182,6 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
     }
 
     /**
