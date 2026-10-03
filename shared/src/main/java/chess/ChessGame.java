@@ -3,7 +3,6 @@ package chess;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.HashSet;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -122,8 +121,8 @@ public class ChessGame {
             throw new InvalidMoveException();
         }
 
-        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
-        if (validMoves == null || !validMoves.contains(move)) {
+        Collection<ChessMove> legalMoves = validMoves(move.getStartPosition());
+        if (legalMoves == null || !legalMoves.contains(move)) {
             throw new InvalidMoveException();
         }
 
@@ -221,9 +220,8 @@ public class ChessGame {
                 ChessPosition targetPosition = new ChessPosition(row,column);
                 ChessPiece targetPiece = board.getPiece(targetPosition);
 
-                Collection<ChessMove> moves;
-
                 if (targetPiece != null && teamColor == targetPiece.getTeamColor()) {
+                    Collection<ChessMove> moves;
                     moves = validMoves(targetPosition);
                     if (moves != null && !moves.isEmpty()) {
                         return false;
