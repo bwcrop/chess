@@ -81,19 +81,19 @@ public class ChessPiece {
         Collection<ChessMove> possibleMoves = new ArrayList<>();
 
         switch (pieceType) {
-            case KING -> StepMoves(board, myPosition, possibleMoves, KING_DIRECTIONS);
-            case KNIGHT -> StepMoves(board, myPosition, possibleMoves, KNIGHT_DIRECTIONS);
-            case QUEEN -> SlidingMoves(board, myPosition, possibleMoves, QUEEN_DIRECTIONS);
-            case ROOK -> SlidingMoves(board, myPosition, possibleMoves, ROOK_DIRECTIONS);
-            case BISHOP -> SlidingMoves(board, myPosition, possibleMoves, BISHOP_DIRECTIONS);
-            case PAWN -> PawnMove(board, myPosition, possibleMoves);
+            case KING -> stepMoves(board, myPosition, possibleMoves, KING_DIRECTIONS);
+            case KNIGHT -> stepMoves(board, myPosition, possibleMoves, KNIGHT_DIRECTIONS);
+            case QUEEN -> slidingMoves(board, myPosition, possibleMoves, QUEEN_DIRECTIONS);
+            case ROOK -> slidingMoves(board, myPosition, possibleMoves, ROOK_DIRECTIONS);
+            case BISHOP -> slidingMoves(board, myPosition, possibleMoves, BISHOP_DIRECTIONS);
+            case PAWN -> pawnMove(board, myPosition, possibleMoves);
         }
 
         return possibleMoves;
     }
     private boolean isInBounds(int row, int col) {return row >= 1 && row <= 8 && col >= 1 && col <= 8;}
 
-    private void StepMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves, int[][] directions) {
+    private void stepMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves, int[][] directions) {
         for (int[] dir : directions) {
             int row = myPosition.getRow() + dir[0];
             int col = myPosition.getColumn() + dir[1];
@@ -108,8 +108,8 @@ public class ChessPiece {
         }
     }
 
-    private void SlidingMoves(ChessBoard board, ChessPosition myPosition,
-                                 Collection<ChessMove> moves, int[][] directions) {
+    private void slidingMoves(ChessBoard board, ChessPosition myPosition,
+                              Collection<ChessMove> moves, int[][] directions) {
         for (int[] dir : directions) {
             int row = myPosition.getRow() + dir[0];
             int col = myPosition.getColumn() + dir[1];
@@ -129,7 +129,7 @@ public class ChessPiece {
             }
         }
     }
-    private void PawnMove(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves) {
+    private void pawnMove(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves) {
         int direction = (pieceColor == ChessGame.TeamColor.WHITE) ? 1 : -1;
         int startRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 2 : 7;
         int promotionRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 8 : 1;
@@ -137,7 +137,7 @@ public class ChessPiece {
         int oneRow = myPosition.getRow() + direction;
 
         if (isInBounds(oneRow, col) && board.getPiece(new ChessPosition(oneRow, col)) == null) {
-            PawnMove(moves, myPosition, new ChessPosition(oneRow, col), promotionRow);
+            pawnMove(moves, myPosition, new ChessPosition(oneRow, col), promotionRow);
 
             if (myPosition.getRow() == startRow) {
                 ChessPosition twoStep = new ChessPosition(myPosition.getRow()+ 2 * direction, col);
@@ -155,11 +155,11 @@ public class ChessPiece {
             ChessPosition target = new ChessPosition(oneRow, targetCol);
             ChessPiece occupant = board.getPiece(target);
             if (occupant != null && occupant.getTeamColor() != pieceColor) {
-                PawnMove(moves, myPosition, target, promotionRow);
+                pawnMove(moves, myPosition, target, promotionRow);
             }
         }
     }
-    private void PawnMove(Collection<ChessMove> moves, ChessPosition from, ChessPosition to, int promotionRow) {
+    private void pawnMove(Collection<ChessMove> moves, ChessPosition from, ChessPosition to, int promotionRow) {
         if (to.getRow() == promotionRow) {
             moves.add(new ChessMove(from, to, PieceType.ROOK));
             moves.add(new ChessMove(from, to, PieceType.KNIGHT));
