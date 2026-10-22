@@ -91,19 +91,16 @@ public class ChessPiece {
 
         return possibleMoves;
     }
-    private boolean isInBounds(int row, int col) {
-        return row >= 1 && row <= 8 && col >= 1 && col <= 8;
-    }
+    private boolean isInBounds(int row, int col) {return row >= 1 && row <= 8 && col >= 1 && col <= 8;}
 
-    private void StepMoves(ChessBoard board, ChessPosition myPosition,
-                              Collection<ChessMove> moves, int[][] directions) {
+    private void StepMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves, int[][] directions) {
         for (int[] dir : directions) {
             int row = myPosition.getRow() + dir[0];
             int col = myPosition.getColumn() + dir[1];
-            if (!isInBounds(row, col)) {
+            if (!isInBounds(row,col)) {
                 continue;
             }
-            ChessPosition target = new ChessPosition(row, col);
+            ChessPosition target = new ChessPosition(row,col);
             ChessPiece occupant = board.getPiece(target);
             if (occupant == null || occupant.getTeamColor() != pieceColor) {
                 moves.add(new ChessMove(myPosition, target, null));
