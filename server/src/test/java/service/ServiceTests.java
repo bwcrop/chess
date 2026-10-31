@@ -10,6 +10,7 @@ import model.AuthData;
 import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mindrot.jbcrypt.BCrypt;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -190,6 +191,14 @@ public class ServiceTests {
         assertNull(userDAO.getUser("alice"));
         assertNull(authDAO.getAuth(auth.authToken()));
         assertTrue(gameDAO.listGames().isEmpty());
+    }
+
+    @Test
+    void registerHashesPassword() throws Exception {
+        registerUser("alice");
+        String stored = userDAO.getUser("alice").password();
+        assertNotEquals("password", stored);
+        assertTrue(BCrypt.checkpw("password", stored));
     }
 }
 
