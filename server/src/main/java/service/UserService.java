@@ -26,7 +26,8 @@ public class UserService {
         if (userDAO.getUser(request.username()) != null) {
             throw new AlreadyTakenException();
         }
-        userDAO.createUser(new UserData(request.username(), request.password(), request.email()));
+        String hashedPassword = BCrypt.hashpw(request.password(), BCrypt.gensalt());
+        userDAO.createUser(new UserData(request.username(), hashedPassword, request.email()));
         return createAuth(request.username());
     }
 
@@ -36,7 +37,7 @@ public class UserService {
             throw new BadRequestException();
         }
         UserData user = userDAO.getUser(request.username());
-        if (user == null || !user.password().equals(request.password())) {
+        if (user == null || !BCrypt.checkpw(request.password(), user.password())) {
             throw new UnauthorizedException();
         }
         return createAuth(user.username());
