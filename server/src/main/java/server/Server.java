@@ -4,9 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.DataAccessException;
+import dataaccess.sql.SQLAuthDAO;
+import dataaccess.sql.SQLGameDAO;
+import dataaccess.sql.SQLUserDAO;
 import dataaccess.UserDAO;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -32,9 +33,17 @@ public class Server {
     private final ClearService clearService;
 
     public Server() {
-        UserDAO userDAO = new MemoryUserDAO();
-        AuthDAO authDAO = new MemoryAuthDAO();
-        GameDAO gameDAO = new MemoryGameDAO();
+        UserDAO userDAO;
+        AuthDAO authDAO;
+        GameDAO gameDAO;
+        try {
+            userDAO = new SQLUserDAO();
+            authDAO = new SQLAuthDAO();
+            gameDAO = new SQLGameDAO();
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Unable to initialize database: " + e.getMessage(), e);
+        }
+
         userService = new UserService(userDAO, authDAO);
         gameService = new GameService(gameDAO, authDAO);
         clearService = new ClearService(userDAO, authDAO, gameDAO);
